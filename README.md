@@ -2,7 +2,7 @@
 
 一个用于查询和下载公历、农历、节气和中国假期对照表的Web应用。
 
-![DateCycle](./images/screenshot.png)
+![DateCycle](https://cdn.jsdelivr.net/gh/isnotry/DateCycle@main/images/screenshot.png)
 
 ## 功能特点
 
