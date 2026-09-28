@@ -12,6 +12,8 @@
 
 ![界面截图](https://cdn.jsdelivr.net/gh/isnotry/DateCycle@main/docs/screenshot.png)
 
+**[在线使用](https://isnotry.github.io/DateCycle/)**
+
 ---
 
 ## 它是什么
@@ -36,6 +38,10 @@ DateCycle 是一个纯前端的日期对照表工具：选好起止日期，生�
 - **Docker 一键部署** —— 附带 `Dockerfile` 与 `docker-compose.yml`
 
 ## 快速开始
+
+### 在线使用
+
+点击 **[在线使用](https://isnotry.github.io/DateCycle/)** 即可打开，无需安装、不用注册 —— 站点由 GitHub Pages 从仓库 `main` 分支自动发布。
 
 ### 本地使用
 

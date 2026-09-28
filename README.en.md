@@ -12,6 +12,8 @@
 
 ![Screenshot](https://cdn.jsdelivr.net/gh/isnotry/DateCycle@main/docs/screenshot.png)
 
+**[Use it online](https://isnotry.github.io/DateCycle/)**
+
 ---
 
 ## What it is
@@ -36,6 +38,10 @@ Conversion data ships with the repo as JSON: `database/all.json` covers 1901-01-
 - **Docker in one command** —— ships with `Dockerfile` and `docker-compose.yml`
 
 ## Quick start
+
+### Use it online
+
+Hit **[Use it online](https://isnotry.github.io/DateCycle/)** above (or here) and you are in — nothing to install, no sign-up. The site is published automatically by GitHub Pages from the repo's `main` branch.
 
 ### Run it locally
 
