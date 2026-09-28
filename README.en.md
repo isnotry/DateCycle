@@ -82,6 +82,7 @@ compose maps container port 80 to host port 8080, so open `http://localhost:8080
 | Form | "下载CSV" button | Exports the current range and options as CSV |
 | Result | Result table | Five columns: Gregorian date / lunar date / weekday / solar term / Chinese holiday |
 | Result | "处理中，请稍候..." | Loading indicator while the table is generated |
+| Footer | "GitHub 开源仓库" text link | Opens this repo's source in a new tab |
 
 ## How it works
 
@@ -142,6 +143,7 @@ DateCycle/
 - To update holiday data, just drop the new `{year}.json` into `database/holidays/`. The front end requests it by year automatically — no code change needed.
 - The holiday fields follow the [holiday-cn](https://github.com/NateScarlet/holiday-cn) schema; keeping `date` / `name` / `isOffDay` is enough.
 - The exported CSV is UTF-8 but has no BOM, so double-clicking it in Excel on Windows can garble Chinese characters — import it via "Data → From Text/CSV" with UTF-8, or prepend `\uFEFF` to the `Blob` content.
+- The footer link points back at the upstream repo; if you fork this for your own use, swap that `href` in `index.html`.
 
 ## Browser support
 

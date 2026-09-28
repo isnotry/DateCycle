@@ -82,6 +82,7 @@ compose 把容器 80 端口映射到宿主机 8080，打开 `http://localhost:80
 | 表单 | 「下载CSV」按钮 | 按当前范围与选项导出 CSV |
 | 结果区 | 结果表格 | 五列：公历日期 / 农历日期 / 星期 / 节气 / 中国假期 |
 | 结果区 | 「处理中，请稍候...」 | 生成过程中的加载提示 |
+| 页脚 | 「GitHub 开源仓库」文字链接 | 新标签页打开本仓库源码 |
 
 ## 核心算法口径
 
@@ -142,6 +143,7 @@ DateCycle/
 - 更新假期数据：把新的 `{年份}.json` 丢进 `database/holidays/` 就行，前端按年份自动请求，无需改代码。
 - 假期数据的字段来自 [holiday-cn](https://github.com/NateScarlet/holiday-cn) 的 schema，保留 `date` / `name` / `isOffDay` 三个字段即可。
 - 导出的 CSV 是 UTF-8 但不带 BOM，Windows 版 Excel 双击打开可能中文乱码 —— 用「数据 → 从文本/CSV 导入」并选 UTF-8，或在 `Blob` 内容前置 `\uFEFF`。
+- 页脚链接指回上游仓库；如果你 fork 自用，记得把 `index.html` 里那个 `href` 换成自己的地址。
 
 ## 浏览器支持
 

@@ -81,6 +81,27 @@
             color: #1976d2;
             font-weight: bold;
         }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 13px;
+            color: #888888;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration-color: #dddddd;
+            text-underline-offset: 2px;
+        }
+        .footer a:hover {
+            text-decoration-color: #3498db;
+        }
+        @media (hover: none) {
+            .footer a:hover {
+                text-decoration-color: #dddddd;
+            }
+        }
     </style>
 </head>
 <body>
@@ -124,6 +145,9 @@
         </table>
     </div>
 
+    <footer class="footer">
+        <a href="https://github.com/isnotry/DateCycle" target="_blank" rel="noopener noreferrer">GitHub 开源仓库</a>
+    </footer>
 
     <script src="script.js"></script>
 </body>
