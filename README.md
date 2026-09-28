@@ -33,7 +33,8 @@ DateCycle 是一个纯前端的日期对照表工具：选好起止日期，生�
 - **范围可调** —— 日期选择器支持 2000-01-01 ~ 2100-12-31
 - **两列可隐藏** —— 「隐藏农历年份」只留月日，「隐藏星期」整列移除，表格与 CSV 同步
 - **一键导出 CSV** —— 导出当前范围，文件名带起止日期
-- **假期懒加载** —— 只按需请求涉及年份的 `holidays/{年份}.json`，取回后在内存缓存
+- **假期按年预取** —— 生成前只请求范围内涉及的年份（每年最多一次），取回后在内存建索引；缺失年份也只问一次
+- **查表走索引** —— 加载后对 73,048 天建一次日期索引，农历 / 节气换算从线性扫描变成 O(1)
 - **多种数据格式** —— 全量 `all.json` / `all.csv` / `all.bin`，逐年 `json` / `min` / `zip`
 - **Docker 一键部署** —— 附带 `Dockerfile` 与 `docker-compose.yml`
 
@@ -94,7 +95,7 @@ compose 把容器 80 端口映射到宿主机 8080，打开 `http://localhost:80
 
 ```text
 农历 / 节气   在 all.json 里按 (gregorian.year, month, date) 查找 → 取 lunar / solarTerm
-中国假期      按年份 fetch database/holidays/{年份}.json → 在 days[] 里按 date 匹配 → name + 后缀
+中国假期      按年份 fetch database/holidays/{年份}.json → 建 year → Map(date → name+后缀) 索引 → 逐日 O(1) 取用
 CSV 导出      与表格同列，逗号分隔，UTF-8 编码，不带 BOM
 ```
 
@@ -145,7 +146,8 @@ DateCycle/
 ## 开发说明
 
 - 前端只有一个 `script.js`，纯 DOM 操作、无框架，改完刷新页面即可生效。
-- `all.json` 是 11 MB 的单文件，首次打开会全量解析；`solarToLunar()` 与 `getSolarTerm()` 每次都线性遍历数组，范围开到整世纪会明显变慢。
+- `all.json` 是 11 MB 的单文件，首次打开会全量解析（gzip 后实际传输约 660 KB）；解析完立刻建一次日期索引，之后每天换算是 O(1)。
+- 假期按**年**缓存索引（`holidayIndex`）：范围内涉及几年就发几个请求，缺文件的年份也会落一个空索引 —— 否则 `holidays/` 只到 2027 年，2028 之后每一天都会重复发一次 404，默认范围 2025~2030 会卡几十秒。
 - 更新假期数据：把新的 `{年份}.json` 丢进 `database/holidays/` 就行，前端按年份自动请求，无需改代码。
 - 假期数据的字段来自 [holiday-cn](https://github.com/NateScarlet/holiday-cn) 的 schema，保留 `date` / `name` / `isOffDay` 三个字段即可。
 - 导出的 CSV 是 UTF-8 但不带 BOM，Windows 版 Excel 双击打开可能中文乱码 —— 用「数据 → 从文本/CSV 导入」并选 UTF-8，或在 `Blob` 内容前置 `\uFEFF`。

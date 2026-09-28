@@ -33,7 +33,8 @@ Conversion data ships with the repo as JSON: `database/all.json` covers 1901-01-
 - **Adjustable range** —— the date pickers accept 2000-01-01 through 2100-12-31
 - **Two columns you can hide** —— "hide lunar year" keeps month + day, "hide weekday" drops that column entirely, in both the table and the CSV
 - **One-click CSV export** —— exports the current range, with start and end dates in the filename
-- **Lazy holiday loading** —— only fetches `holidays/{year}.json` for the years in range, then caches them in memory
+- **Holidays prefetched per year** —— before rendering it requests only the years in range (at most once each) and indexes them in memory; a missing year is asked for only once too
+- **Indexed lookups** —— all 73,048 days are indexed once after load, so lunar / solar-term lookup is O(1) instead of a linear scan
 - **Several data formats** —— full `all.json` / `all.csv` / `all.bin`, plus per-year `json` / `min` / `zip`
 - **Docker in one command** —— ships with `Dockerfile` and `docker-compose.yml`
 
@@ -94,7 +95,7 @@ compose maps container port 80 to host port 8080, so open `http://localhost:8080
 
 ```text
 Lunar / solar term   look up all.json by (gregorian.year, month, date) → take lunar / solarTerm
-Chinese holidays     fetch database/holidays/{year}.json for that year → match by date in days[] → name + suffix
+Chinese holidays     fetch database/holidays/{year}.json → index year → Map(date → name + suffix) → O(1) per day
 CSV export           same columns as the table, comma-separated, UTF-8 without BOM
 ```
 
@@ -145,7 +146,8 @@ DateCycle/
 ## Development notes
 
 - The whole front end is a single `script.js` with plain DOM code and no framework — edit it and refresh.
-- `all.json` is a single 11 MB file that is fully parsed on first load; `solarToLunar()` and `getSolarTerm()` scan the array linearly on every call, so a whole-century range gets noticeably slow.
+- `all.json` is a single 11 MB file that is fully parsed on first load (~660 KB over the wire gzipped); right after parsing it builds a date index, so every per-day lookup is O(1).
+- Holidays are cached **per year** in `holidayIndex`: one request per year in range, and a year with no file still gets an empty index — otherwise, since `holidays/` ends at 2027, every single day from 2028 on would fire another 404, stalling the default 2025–2030 range for tens of seconds.
 - To update holiday data, just drop the new `{year}.json` into `database/holidays/`. The front end requests it by year automatically — no code change needed.
 - The holiday fields follow the [holiday-cn](https://github.com/NateScarlet/holiday-cn) schema; keeping `date` / `name` / `isOffDay` is enough.
 - The exported CSV is UTF-8 but has no BOM, so double-clicking it in Excel on Windows can garble Chinese characters — import it via "Data → From Text/CSV" with UTF-8, or prepend `\uFEFF` to the `Blob` content.
